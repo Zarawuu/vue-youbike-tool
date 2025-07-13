@@ -1,6 +1,14 @@
 <template>
   <div class="p-6 max-w-3xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">🚲 YouBike 即時查詢</h1>
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">🚲 YouBike 即時查詢</h1>
+      <div 
+        class="tooltip tooltip-info tooltip-left" 
+        data-tip="按下愛心可以收藏或取消收藏站點"
+      >
+        <button class="btn btn-sm btn-circle btn-info">?</button>
+      </div>
+    </div>
     <SearchBar 
       @search="handleSearch" 
       @cancel="handleCancelSearch"  
@@ -8,11 +16,19 @@
     <StationList
       :stations="filteredStations"
       :favorites="favorites"
+      :expandedSno="expandedSno"
       @select="selectStation"
       @toggle-favorite="toggleFavorite"
+      @toggle-expand="toggleExpand"
     />
     <FavoriteList :favorites="favorites" @select="selectStation" />
-    <StationDetail v-if="selectedStation" :station="selectedStation" />
+    <Transition name="slide-left-fade" mode="out-in">
+      <StationDetail 
+        v-if="selectedStation" 
+        :station="selectedStation" 
+        :key="selectedStation.sno"  
+      />
+    </Transition>
   </div>
 </template>
 
@@ -40,12 +56,10 @@ const handleSearch = (keyword) => {
   filteredStations.value = stations.value.filter(
     s => s.sna.toLowerCase().includes(k) || s.ar.toLowerCase().includes(k)
   )
-  selectedStation.value = null
 }
 
 const handleCancelSearch = () => {
   filteredStations.value = []
-  selectedStation.value = null
 }
 
 const selectStation = (station) => {
@@ -71,8 +85,41 @@ const toggleFavorite = (station) => {
   saveFavorites()
 }
 
+const expandedSno = ref(null)
+
+const toggleExpand = (sno) => {
+  expandedSno.value = expandedSno.value === sno ? null : sno
+}
+
 onMounted(() => {
   fetchYouBikeData()
   loadFavorites()
 })
 </script>
+
+<style scoped>
+.slide-left-fade-enter-active,
+.slide-left-fade-leave-active {
+  transition: all 0.4s ease;
+}
+
+.slide-left-fade-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slide-left-fade-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-left-fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-left-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+</style>
