@@ -86,6 +86,7 @@ const toggleFavorite = (station) => {
   const index = favorites.value.findIndex(s => s.sno === station.sno)
   if (index > -1) {
     favorites.value.splice(index, 1)
+    selectedStation.value = null
   } else {
     favorites.value.push(station)
   }
