@@ -1,7 +1,14 @@
 <template>
   <div class="p-6 max-w-3xl mx-auto">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">🚲 YouBike 即時查詢</h1>
+      <h1 class="flex items-center text-2xl font-bold">
+        <img
+         :src="youbikeIcon"
+         alt="img"
+         class="w-20 h-20 mr-1"
+        />
+        即時查詢
+      </h1>
       <div 
         class="tooltip tooltip-info tooltip-left" 
         data-tip="按下愛心可以收藏或取消收藏站點"
@@ -35,7 +42,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-
+import youbikeIcon from '@/assets/youbike.png'
 import SearchBar from './components/SearchBar.vue'
 import StationList from './components/StationList.vue'
 import StationDetail from './components/StationDetail.vue'
